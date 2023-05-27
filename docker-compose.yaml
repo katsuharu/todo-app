@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "1323:1323"
+    command:
+      - air
+    volumes:
+      - ./:/go/src/app
+    depends_on:
+      - db
+    environment:
+      READ_DB_PASSWORD: password
+      WRITE_DB_PASSWORD: password
+      READ_DB_HOST: "db:3306"
+      WRITE_DB_HOST: "db:3306"
+      DB_NAME: todo
+      APP_MYSQL_USER: app-user
+  db:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: todo
+      MYSQL_USER: app-user
+      MYSQL_PASSWORD: password
+      TZ: Asia/Tokyo
+    volumes:
+      - ./db/mysql/migrations:/docker-entrypoint-initdb.d
+      - ./db/mysql/etc/my.cnf:/etc/mysql/conf.d/my.cnf

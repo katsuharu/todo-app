@@ -1,0 +1,85 @@
+openapi: 3.1.0
+info:
+  version: 0.0.1
+  title: Todo App API
+  contact:
+    name: Katsuharu
+    url: https://github.com/katsuharu/todo-app
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /todos:
+    post:
+      description: Creates a todo.
+      operationId: createTodo
+      tags:
+        - todos
+      requestBody:
+        description: todo to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title  
+                - body
+              properties:
+                title:
+                  type: string
+                body:
+                  type: string
+      responses:
+        201:
+          description: Todo created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+              example:
+                id: "xxxx"
+                title: "todo title"
+                body: "todo body"
+                created_at: "2023-05-21T13:00:00+09:00"
+                updated_at: "2023-05-21T13:00:00+09:00"
+        default:
+          description: default error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      required:
+        - id
+        - title
+        - body
+        - created_at
+        - updated_at
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
