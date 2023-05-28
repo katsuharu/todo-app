@@ -27,17 +27,21 @@ type TodoDTO struct {
 	UpdatedAt time.Time
 }
 
-var datas []TodoDTO
+var datas []*todo.Todo
 
 func (w wrapper) Create(ctx context.Context, entity *todo.Todo) (*todo.Todo, error) {
 
-	datas = append(datas, TodoDTO{
-		ID:        entity.ID.String(),
-		Title:     entity.Title.String(),
-		Body:      entity.Body.String(),
+	datas = append(datas, &todo.Todo{
+		ID:        entity.ID,
+		Title:     entity.Title,
+		Body:      entity.Body,
 		CreatedAt: entity.CreatedAt,
 		UpdatedAt: entity.UpdatedAt,
 	})
 
 	return entity, nil
+}
+
+func (w wrapper) List(ctx context.Context) ([]*todo.Todo, error) {
+	return datas, nil
 }

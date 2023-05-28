@@ -19,9 +19,17 @@ func NewTodo(r repository.Todo) Todo {
 
 type Todo interface {
 	Create(ctc context.Context, title, body string) (*CreateTodoResponse, error)
+	List(ctx context.Context) ([]*ListTodoResponse, error)
 }
 
 type CreateTodoResponse struct {
+	Title     string
+	Body      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type ListTodoResponse struct {
 	Title     string
 	Body      string
 	CreatedAt time.Time
@@ -45,4 +53,23 @@ func (w wrapper) Create(ctx context.Context, title, body string) (*CreateTodoRes
 		CreatedAt: t.CreatedAt,
 		UpdatedAt: t.UpdatedAt,
 	}, nil
+}
+
+func (w wrapper) List(ctx context.Context) ([]*ListTodoResponse, error) {
+	results, err := w.r.List(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get todo list: %w", err)
+	}
+
+	var response []*ListTodoResponse
+	for _, v := range results {
+		response = append(response, &ListTodoResponse{
+			Title:     v.Title.String(),
+			Body:      v.Body.String(),
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return response, nil
 }

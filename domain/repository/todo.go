@@ -8,4 +8,5 @@ import (
 
 type Todo interface {
 	Create(ctx context.Context, todo *todo.Todo) (*todo.Todo, error)
+	List(ctx context.Context) ([]*todo.Todo, error)
 }

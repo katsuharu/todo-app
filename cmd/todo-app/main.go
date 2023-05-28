@@ -27,6 +27,7 @@ func main() {
 	th := handler.NewTodo(ta)
 
 	e.POST("/todos", th.Create)
+	e.GET("/todos", th.List)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
